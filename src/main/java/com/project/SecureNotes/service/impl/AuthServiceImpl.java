@@ -23,18 +23,17 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void registerUser(RegisterRequest request) {
+    public User registerUser(RegisterRequest request) {
         User user = new User();
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(Role.USER);
-        userRepository.save(user);
-
+        return userRepository.save(user);
     }
 
     @Override
-    public String getAllUsers(){
-        List<User> allUsers = userRepository.findAll();
-        return allUsers.toString();
+    public List<User> getAllUsers() {
+        return userRepository.findAll(); // entity list, not strings
+
     }
 }
