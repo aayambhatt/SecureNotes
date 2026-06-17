@@ -25,6 +25,9 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public User registerUser(RegisterRequest request) {
         User user = new User();
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new RuntimeException("Email already in use!");
+        }
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(Role.USER);

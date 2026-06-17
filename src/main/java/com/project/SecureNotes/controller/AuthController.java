@@ -7,6 +7,7 @@ import com.project.SecureNotes.entity.User;
 import com.project.SecureNotes.mapper.UserMapper;
 import com.project.SecureNotes.service.AuthService;
 import com.project.SecureNotes.service.impl.AuthServiceImpl;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +29,7 @@ public class AuthController {
     }
 
     @PostMapping("/auth/register")
+    @Valid
     public ResponseEntity<UserResponse> register(@RequestBody RegisterRequest request){
         User savedUser = authService.registerUser(request);
         return ResponseEntity
