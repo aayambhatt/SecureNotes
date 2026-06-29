@@ -39,4 +39,14 @@ public class AuthServiceImpl implements AuthService {
         return userRepository.findAll(); // entity list, not strings
 
     }
+
+    @Override
+    public void deleteUserByEmail(String email){
+        // find user by email
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(()-> new RuntimeException("User Not Found"));
+
+        // If found, delete them
+        userRepository.delete(user);
+    }
 }

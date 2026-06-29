@@ -10,10 +10,7 @@ import com.project.SecureNotes.service.impl.AuthServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -44,6 +41,12 @@ public class AuthController {
                 .map(userMapper::toResponse) // map each entity → DTO
                 .toList();
         return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/auth/users/{email}")
+    public ResponseEntity<String> deleteUser(@PathVariable  String email){
+        authService.deleteUserByEmail(email);
+        return ResponseEntity.ok("User deleted successfully");
     }
 
 
