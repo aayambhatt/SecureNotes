@@ -9,6 +9,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 
 @Service
@@ -29,6 +31,7 @@ public class AuthServiceImpl implements AuthService {
             throw new RuntimeException("Email already in use!");
         }
         user.setEmail(request.getEmail());
+        user.setName(request.getName());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(Role.USER);
         return userRepository.save(user);
@@ -41,12 +44,16 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void deleteUserByEmail(String email){
-        // find user by email
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(()-> new RuntimeException("User Not Found"));
+    public String deleteUserById(UUID id){
 
-        // If found, delete them
+        User user = userRepository.findById(id).
+                orElseThrow(() -> new RuntimeException("User not found with ID: " + id));
+
+
+        String name = user.getName();
         userRepository.delete(user);
+
+        return name;
+
     }
 }

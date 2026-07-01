@@ -6,13 +6,13 @@ import com.project.SecureNotes.dto.UserResponse;
 import com.project.SecureNotes.entity.User;
 import com.project.SecureNotes.mapper.UserMapper;
 import com.project.SecureNotes.service.AuthService;
-import com.project.SecureNotes.service.impl.AuthServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 public class AuthController {
@@ -26,8 +26,7 @@ public class AuthController {
     }
 
     @PostMapping("/auth/register")
-    @Valid
-    public ResponseEntity<UserResponse> register(@RequestBody RegisterRequest request){
+    public ResponseEntity<UserResponse> register(@Valid @RequestBody RegisterRequest request){
         User savedUser = authService.registerUser(request);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -43,10 +42,10 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/auth/users/{email}")
-    public ResponseEntity<String> deleteUser(@PathVariable  String email){
-        authService.deleteUserByEmail(email);
-        return ResponseEntity.ok("User deleted successfully");
+    @DeleteMapping("/auth/users/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable UUID id){
+      String deletedUser =  authService.deleteUserById(id);
+        return ResponseEntity.ok("User " + deletedUser + " deleted from DB");
     }
 
 

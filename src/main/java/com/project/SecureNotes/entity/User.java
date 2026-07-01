@@ -1,6 +1,5 @@
 package com.project.SecureNotes.entity;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import lombok.*;
 
 import java.util.UUID;
@@ -15,6 +14,10 @@ public class User {
    private UUID id;
    @Column(unique = true, nullable = false)
    private String email;
+
+   @Column
+   private String name;
+
    private String password;
    @Enumerated(EnumType.STRING)
    private Role role;
