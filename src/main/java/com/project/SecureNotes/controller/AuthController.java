@@ -1,6 +1,8 @@
 package com.project.SecureNotes.controller;
 
 
+import com.project.SecureNotes.dto.LoginRequest;
+import com.project.SecureNotes.dto.LoginResponse;
 import com.project.SecureNotes.dto.RegisterRequest;
 import com.project.SecureNotes.dto.UserResponse;
 import com.project.SecureNotes.entity.User;
@@ -31,6 +33,13 @@ public class AuthController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(userMapper.toResponse(savedUser));
+    }
+
+    @PostMapping("/auth/login")
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest){
+        LoginResponse loginResponse = authService.loginUser(loginRequest);
+
+        return ResponseEntity.ok(loginResponse);
     }
 
     @GetMapping("/auth/getUsers")

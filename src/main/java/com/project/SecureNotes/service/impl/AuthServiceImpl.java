@@ -1,5 +1,7 @@
 package com.project.SecureNotes.service.impl;
 
+import com.project.SecureNotes.dto.LoginRequest;
+import com.project.SecureNotes.dto.LoginResponse;
 import com.project.SecureNotes.dto.RegisterRequest;
 import com.project.SecureNotes.entity.Role;
 import com.project.SecureNotes.entity.User;
@@ -35,6 +37,24 @@ public class AuthServiceImpl implements AuthService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(Role.USER);
         return userRepository.save(user);
+    }
+
+    @Override
+    public LoginResponse loginUser(LoginRequest loginRequest){
+        // fetch the user
+        User user = userRepository.findByEmail(loginRequest.getEmail())
+                .orElseThrow(()-> new RuntimeException("Invalid Credentials"));
+
+        // match password
+       if(!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())){
+           throw new RuntimeException("Invalid password");
+       }
+
+       // return dummy token
+       LoginResponse loginResponse = new LoginResponse();
+       loginResponse.setToken("eYdahjgJSYgdjhasbefjgjBjkhbfs");
+       return loginResponse;
+
     }
 
     @Override

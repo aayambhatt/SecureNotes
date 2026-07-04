@@ -1,5 +1,7 @@
 package com.project.SecureNotes.service;
 
+import com.project.SecureNotes.dto.LoginRequest;
+import com.project.SecureNotes.dto.LoginResponse;
 import com.project.SecureNotes.dto.RegisterRequest;
 import com.project.SecureNotes.entity.User;
 
@@ -10,4 +12,5 @@ public interface AuthService {
      User registerUser(RegisterRequest registerRequest);
      List<User> getAllUsers();
      String deleteUserById(UUID id);
+     LoginResponse loginUser(LoginRequest loginRequest);
 }
