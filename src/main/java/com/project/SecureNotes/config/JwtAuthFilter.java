@@ -39,18 +39,25 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
 
         String token = authHeader.substring(7);
-        String email = jwtService.extractEmail(token);
 
-        if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) { // we extracted a valid email from the token
-            // only enter here if we have an email AND nobody is authenticated yet
-            UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-            UsernamePasswordAuthenticationToken authToken =
-                    new UsernamePasswordAuthenticationToken(
-                            userDetails, null, userDetails.getAuthorities());
+        try {
+            String extractedEmail = jwtService.extractEmail(token);
 
-            SecurityContextHolder.getContext().setAuthentication(authToken);
+            if (extractedEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails = userDetailsService.loadUserByUsername(extractedEmail);
+
+                if (jwtService.isTokenValid(token, userDetails)) {
+                    UsernamePasswordAuthenticationToken authToken =
+                            new UsernamePasswordAuthenticationToken(
+                                    userDetails, null, userDetails.getAuthorities());
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                }
+            }
+        } catch (io.jsonwebtoken.JwtException | IllegalArgumentException e) {
+            logger.info("Invalid JWT token");
         }
-        filterChain.doFilter(request, response);
+
+        filterChain.doFilter(request, response); // ALWAYS runs — inside or outside try, request must continue
 
     }
 }
