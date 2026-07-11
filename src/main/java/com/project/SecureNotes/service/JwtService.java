@@ -40,6 +40,10 @@ public class JwtService {
         return getClaims(token).getSubject();
     }
 
+    public String extractRole(String token){
+        return getClaims(token).get("role", String.class);
+    }
+
     public boolean isTokenExpired(String token){
         return getClaims(token).getExpiration().before(new Date());
     }
