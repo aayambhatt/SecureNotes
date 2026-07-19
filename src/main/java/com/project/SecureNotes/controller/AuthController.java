@@ -11,6 +11,8 @@ import com.project.SecureNotes.service.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -52,8 +54,11 @@ public class AuthController {
     }
 
     @DeleteMapping("/auth/users/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable UUID id){
-      String deletedUser =  authService.deleteUserById(id);
+    public ResponseEntity<String> deleteUser(
+            @PathVariable UUID id,
+            @AuthenticationPrincipal UserDetails userDetails
+    ){
+      String deletedUser =  authService.deleteUserById(id, userDetails);
         return ResponseEntity.ok("User " + deletedUser + " deleted from DB");
     }
 

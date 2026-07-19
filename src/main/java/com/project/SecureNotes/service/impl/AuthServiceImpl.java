@@ -9,10 +9,12 @@ import com.project.SecureNotes.entity.User;
 import com.project.SecureNotes.repository.UserRepository;
 import com.project.SecureNotes.service.AuthService;
 import com.project.SecureNotes.service.JwtService;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -61,13 +63,20 @@ public class AuthServiceImpl implements AuthService {
 
     }
 
-//    @Override
-//    public String updateUser(UUID id, UpdateRequest updateRequest){
-//        User user = userRepository.findById(id)
-//                .orElseThrow(()-> new RuntimeException("User does not exists"));
-//
-//
-//    }
+    @Override
+    public String updateUser(UUID id, UpdateRequest updateRequest) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User does not exist"));
+
+        // Modify allowed fields
+        if (updateRequest.getName() != null) {
+            user.setName(updateRequest.getName());
+        }
+
+        userRepository.save(user);
+        return "User updated successfully";
+    }
+
 
     @Override
     public List<User> getAllUsers() {
@@ -76,11 +85,14 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String deleteUserById(UUID id){
+    public String deleteUserById(UUID id, UserDetails userDetails){
 
         User user = userRepository.findById(id).
                 orElseThrow(() -> new RuntimeException("User not found with ID: " + id));
 
+        if(!Objects.equals(user.getEmail(), userDetails.getUsername())){
+            throw new RuntimeException("You are not authorised to delete this User");
+        }
 
         String name = user.getName();
         userRepository.delete(user);
