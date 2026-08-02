@@ -6,6 +6,7 @@ import com.project.SecureNotes.dto.RegisterRequest;
 import com.project.SecureNotes.dto.UpdateRequest;
 import com.project.SecureNotes.entity.Role;
 import com.project.SecureNotes.entity.User;
+import com.project.SecureNotes.exception.EmailAlreadyInUseException;
 import com.project.SecureNotes.repository.UserRepository;
 import com.project.SecureNotes.service.AuthService;
 import com.project.SecureNotes.service.JwtService;
@@ -36,7 +37,7 @@ public class AuthServiceImpl implements AuthService {
     public User registerUser(RegisterRequest request) {
         User user = new User();
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email already in use!");
+            throw new EmailAlreadyInUseException("Email: " + request.getEmail() + " already exists");
         }
         user.setEmail(request.getEmail());
         user.setName(request.getName());
