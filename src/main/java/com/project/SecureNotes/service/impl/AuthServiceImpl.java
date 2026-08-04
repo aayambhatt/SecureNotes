@@ -7,6 +7,7 @@ import com.project.SecureNotes.dto.UpdateRequest;
 import com.project.SecureNotes.entity.Role;
 import com.project.SecureNotes.entity.User;
 import com.project.SecureNotes.exception.EmailAlreadyInUseException;
+import com.project.SecureNotes.exception.UserNotFoundException;
 import com.project.SecureNotes.repository.UserRepository;
 import com.project.SecureNotes.service.AuthService;
 import com.project.SecureNotes.service.JwtService;
@@ -67,7 +68,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public String updateUser(UUID id, UpdateRequest updateRequest) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User does not exist"));
+                .orElseThrow(() -> new UserNotFoundException("User does not exist"));
 
         // Modify allowed fields
         if (updateRequest.getName() != null) {
@@ -89,7 +90,7 @@ public class AuthServiceImpl implements AuthService {
     public String deleteUserById(UUID id, UserDetails userDetails){
 
         User user = userRepository.findById(id).
-                orElseThrow(() -> new RuntimeException("User not found with ID: " + id));
+                orElseThrow(() -> new UserNotFoundException("User not found with ID: " + id));
 
         if(!Objects.equals(user.getEmail(), userDetails.getUsername())){
             throw new RuntimeException("You are not authorised to delete this User");
