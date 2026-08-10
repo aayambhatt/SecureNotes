@@ -99,7 +99,7 @@ public class AuthServiceImpl implements AuthService {
                 orElseThrow(() -> new UserNotFoundException("User not found with ID: " + id));
 
         if(!Objects.equals(user.getEmail(), userDetails.getUsername())){
-            throw new RuntimeException("You are not authorised to delete this User");
+            throw new UnauthorizedActionException("You are not authorised to delete this User");
         }
 
         String name = user.getName();
