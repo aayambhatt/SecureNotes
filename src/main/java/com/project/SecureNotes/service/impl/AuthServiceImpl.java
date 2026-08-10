@@ -57,7 +57,7 @@ public class AuthServiceImpl implements AuthService {
 
         // match password
        if(!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())){
-           throw new RuntimeException("Invalid password");
+           throw new InvalidCredentialsException("Invalid Credentials");
        }
 
 
