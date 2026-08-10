@@ -7,6 +7,7 @@ import com.project.SecureNotes.dto.UpdateRequest;
 import com.project.SecureNotes.entity.Role;
 import com.project.SecureNotes.entity.User;
 import com.project.SecureNotes.exception.EmailAlreadyInUseException;
+import com.project.SecureNotes.exception.InvalidCredentialsException;
 import com.project.SecureNotes.exception.UnauthorizedActionException;
 import com.project.SecureNotes.exception.UserNotFoundException;
 import com.project.SecureNotes.repository.UserRepository;
@@ -52,7 +53,7 @@ public class AuthServiceImpl implements AuthService {
     public LoginResponse loginUser(LoginRequest loginRequest){
         // fetch the user
         User user = userRepository.findByEmail(loginRequest.getEmail())
-                .orElseThrow(()-> new RuntimeException("Invalid Credentials"));
+                .orElseThrow(()-> new InvalidCredentialsException("Invalid Credentials"));
 
         // match password
        if(!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())){
