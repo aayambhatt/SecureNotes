@@ -14,7 +14,7 @@ public class WebConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**") // Applies to ALL endpoints in the app
                         .allowedOrigins("http://localhost:4200") // Allows your Angular app
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Allowed HTTP methods
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS") // Allowed HTTP methods
                         .allowedHeaders("*") // Allows all headers (like Authorization headers later)
                         .allowCredentials(true);
             }
