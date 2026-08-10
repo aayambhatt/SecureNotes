@@ -1,10 +1,7 @@
 package com.project.SecureNotes.controller;
 
 
-import com.project.SecureNotes.dto.LoginRequest;
-import com.project.SecureNotes.dto.LoginResponse;
-import com.project.SecureNotes.dto.RegisterRequest;
-import com.project.SecureNotes.dto.UserResponse;
+import com.project.SecureNotes.dto.*;
 import com.project.SecureNotes.entity.User;
 import com.project.SecureNotes.mapper.UserMapper;
 import com.project.SecureNotes.service.AuthService;
@@ -36,6 +33,19 @@ public class AuthController {
                 .status(HttpStatus.CREATED)
                 .body(userMapper.toResponse(savedUser));
     }
+
+    @PatchMapping("/auth/update/{id}")
+    public ResponseEntity<String> update(
+            @PathVariable UUID id,
+            @Valid @RequestBody UpdateRequest updateRequest,
+            @AuthenticationPrincipal UserDetails userDetails
+    ){
+        String response =  authService.updateUser(id, updateRequest, userDetails);
+
+        return ResponseEntity.ok(response);
+    }
+
+
 
     @PostMapping("/auth/login")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest){

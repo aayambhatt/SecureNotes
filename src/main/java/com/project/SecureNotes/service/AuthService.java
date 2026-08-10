@@ -15,5 +15,5 @@ public interface AuthService {
      List<User> getAllUsers();
      String deleteUserById(UUID id, UserDetails userDetails);
      LoginResponse loginUser(LoginRequest loginRequest);
-     String updateUser(UUID id, UpdateRequest updateRequest);
+     String updateUser(UUID id, UpdateRequest updateRequest, UserDetails userDetails);
 }

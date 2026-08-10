@@ -7,6 +7,7 @@ import com.project.SecureNotes.dto.UpdateRequest;
 import com.project.SecureNotes.entity.Role;
 import com.project.SecureNotes.entity.User;
 import com.project.SecureNotes.exception.EmailAlreadyInUseException;
+import com.project.SecureNotes.exception.UnauthorizedActionException;
 import com.project.SecureNotes.exception.UserNotFoundException;
 import com.project.SecureNotes.repository.UserRepository;
 import com.project.SecureNotes.service.AuthService;
@@ -66,9 +67,13 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String updateUser(UUID id, UpdateRequest updateRequest) {
+    public String updateUser(UUID id, UpdateRequest updateRequest, UserDetails userDetails) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User does not exist"));
+
+        if(!Objects.equals(user.getEmail(), userDetails.getUsername())){
+            throw new UnauthorizedActionException("You are not authorized to update user details");
+        }
 
         // Modify allowed fields
         if (updateRequest.getName() != null) {
