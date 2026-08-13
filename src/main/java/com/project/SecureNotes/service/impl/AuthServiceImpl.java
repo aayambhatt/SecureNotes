@@ -13,6 +13,7 @@ import com.project.SecureNotes.exception.UserNotFoundException;
 import com.project.SecureNotes.repository.UserRepository;
 import com.project.SecureNotes.service.AuthService;
 import com.project.SecureNotes.service.JwtService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -86,6 +87,7 @@ public class AuthServiceImpl implements AuthService {
 
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public List<User> getAllUsers() {
         return userRepository.findAll(); // entity list, not strings
 
