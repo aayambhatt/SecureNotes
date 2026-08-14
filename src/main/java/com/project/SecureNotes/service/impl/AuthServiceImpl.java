@@ -13,6 +13,7 @@ import com.project.SecureNotes.exception.UserNotFoundException;
 import com.project.SecureNotes.repository.UserRepository;
 import com.project.SecureNotes.service.AuthService;
 import com.project.SecureNotes.service.JwtService;
+import com.project.SecureNotes.util.SecurityUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -99,13 +100,12 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.findById(id).
                 orElseThrow(() -> new UserNotFoundException("User not found with ID: " + id));
 
-        if(!Objects.equals(user.getEmail(), userDetails.getUsername())){
+        if (!SecurityUtil.isAdmin(userDetails) && !Objects.equals(user.getEmail(), userDetails.getUsername())) {
             throw new UnauthorizedActionException("You are not authorised to delete this User");
         }
 
         String name = user.getName();
         userRepository.delete(user);
-
         return name;
 
     }
