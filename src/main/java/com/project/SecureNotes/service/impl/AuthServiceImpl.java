@@ -78,8 +78,19 @@ public class AuthServiceImpl implements AuthService {
         }
 
         // Modify allowed fields
-        if (updateRequest.getName() != null) {
+        if (updateRequest.getName() != null && !updateRequest.getName().isBlank()) {
             user.setName(updateRequest.getName());
+        }
+        if(updateRequest.getPassword()!=null && !updateRequest.getPassword().isBlank()){
+
+            if (updateRequest.getCurrentPassword() == null || updateRequest.getCurrentPassword().isBlank()) {
+                throw new IllegalArgumentException("Current password is required to set a new password");
+            }
+            if (!passwordEncoder.matches(updateRequest.getCurrentPassword(), user.getPassword())) {
+                throw new UnauthorizedActionException("Incorrect current password");
+            }
+
+            user.setPassword(passwordEncoder.encode(updateRequest.getPassword()));
         }
 
         userRepository.save(user);
