@@ -6,10 +6,7 @@ import com.project.SecureNotes.dto.RegisterRequest;
 import com.project.SecureNotes.dto.UpdateRequest;
 import com.project.SecureNotes.entity.Role;
 import com.project.SecureNotes.entity.User;
-import com.project.SecureNotes.exception.EmailAlreadyInUseException;
-import com.project.SecureNotes.exception.InvalidCredentialsException;
-import com.project.SecureNotes.exception.UnauthorizedActionException;
-import com.project.SecureNotes.exception.UserNotFoundException;
+import com.project.SecureNotes.exception.*;
 import com.project.SecureNotes.repository.UserRepository;
 import com.project.SecureNotes.service.AuthService;
 import com.project.SecureNotes.service.JwtService;
@@ -84,7 +81,7 @@ public class AuthServiceImpl implements AuthService {
         if(updateRequest.getPassword()!=null && !updateRequest.getPassword().isBlank()){
 
             if (updateRequest.getCurrentPassword() == null || updateRequest.getCurrentPassword().isBlank()) {
-                throw new IllegalArgumentException("Current password is required to set a new password");
+                throw new CurrentPasswordRequiredException("Current password is required to set a new password");
             }
             if (!passwordEncoder.matches(updateRequest.getCurrentPassword(), user.getPassword())) {
                 throw new UnauthorizedActionException("Incorrect current password");
