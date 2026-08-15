@@ -5,6 +5,8 @@ import lombok.Data;
 
 @Data
 public class UpdateRequest {
-    @NotBlank
+
     private String name;
+    private String currentPassword;
+    private String password;
 }
